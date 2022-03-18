@@ -1,0 +1,46 @@
+#- name: Install NodeJS
+#  yum:
+#    name:
+#      - nodejs
+#      - make
+#      - gcc-c++
+#    state: present
+
+- name: setup rsyslog
+  template:
+    src: rsyslog.conf
+    dest: /etc/rsyslog.d/roboshop.conf
+
+- name: Restart rsyslog
+  systemd:
+    name: rsyslog
+    state: restarted
+
+- name: Install nodejs
+  shell: curl -fsSL https://rpm.nodesource.com/setup_lts.x | bash -
+- name: installing nodejs
+  yum:
+    name:
+      - nodejs
+      - make
+      - gcc-c++
+    state: present
+
+- name:  Download
+  include_tasks: download.yml
+
+- name: Install nodejs dependencies
+  community.general.npm:
+    path: /home/roboshop/{{COMPONENT}}
+  become_user: roboshop
+
+- name: Systemd
+  include_tasks: systemd.yml
+
+- name: Node exporter
+  include_tasks: node-exporter.yml
+
+- name: filebeat setup
+  include_tasks: filebeat.yml
+  vars:
+    OUTPUT_TO: elasticsearch

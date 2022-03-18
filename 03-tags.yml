@@ -1,0 +1,14 @@
+- name: practice on tags
+  hosts: all
+  tasks:
+    - name: Centos
+      debug:
+        msg: CentOs
+      tags:
+        - centos
+
+    - name: Ubuntu
+      debug:
+        msg: Ubuntu
+      tags:
+        - ubuntu

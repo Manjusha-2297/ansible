@@ -1,0 +1,52 @@
+- name: Install nginx
+  yum:
+    name: nginx
+    state: present
+
+- name: Download frontend archive
+  ansible.builtin.unarchive:
+    src: https://github.com/roboshop-devops-project/frontend/archive/main.zip
+    dest: /tmp
+    remote_src: yes
+
+- name: Remove Old content
+  ansible.builtin.file:
+    path: /usr/share/nginx/html
+    state: absent
+
+- name: Copy extracted content to nginx path
+  ansible.builtin.copy:
+    src: /tmp/frontend-main/static/
+    dest: /usr/share/nginx/html/
+    remote_src: yes
+
+- name: Copy roboshop config file
+  copy:
+    src: roboshop.conf
+    dest: /etc/nginx/default.d/roboshop.conf
+  notify: Restart nginx
+
+- name: Update NGINX config file
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+  notify: Restart nginx
+
+- name: start nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Include node_exporter
+  include_role:
+    name: common
+    tasks_from: node-exporter
+
+- name: Include Filebeat
+  include_role:
+    name: common
+    tasks_from: filebeat
+  vars:
+    OUTPUT_TO: logstash
+    NGINX: true

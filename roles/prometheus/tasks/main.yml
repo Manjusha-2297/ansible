@@ -1,0 +1,27 @@
+- name: update prometheus config
+  template:
+    src: "{{item}}.yml"
+    dest: /opt/prometheus/{{item}}.yml
+  loop:
+    - prometheus
+    - alerts
+    - records
+
+- name: restart prometheus service
+  systemd:
+    name: prometheus
+    state: restarted
+    enabled: yes
+
+- name: update alertmanager config
+  template:
+    src: "{{item}}.yml"
+    dest: /opt/alertmanager/{{item}}.yml
+  loop:
+    - alertmanager
+
+- name: restart alertmanager service
+  systemd:
+    name: alertmanager
+    state: restarted
+    enabled: yes

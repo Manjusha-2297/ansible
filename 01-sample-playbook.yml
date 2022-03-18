@@ -1,0 +1,9 @@
+- name: Sample Playbook # should start with list
+  hosts:
+    - all # hosts
+  tasks:
+    - name: printing hello world
+      debug: # module
+        msg: Hello world
+  roles:
+    - sample.yml # role name

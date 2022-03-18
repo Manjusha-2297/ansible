@@ -1,0 +1,50 @@
+- name: Demo on Variables
+  hosts: all
+  vars: # these can be access on whole play book
+    URL1: play.google.com
+    URL: play.google.com
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Print a Variable from Play
+      debug:
+        msg: URL = {{URL1}}
+    - name: Print a varibale from File
+      debug:
+        msg: URL = {{URL2}}
+    - name: print a task level variable
+      vars: #scope of variable is only on this tasks
+        URL3: task.google.com
+      debug:
+        msg: URL = {{URL3}}
+    - name: print variable from host file
+      debug:
+        msg: URL = {{URL4}} # declared variable in inv file and calling here
+    - name: print variable from command line
+      debug:
+        msg: URL = {{URL5}} # declare a variable during execution time
+    - name: show variable precedance
+      vars:
+        URL: task.google.com
+      debug:
+        msg: URL = {{URL}}
+    - name: print fact variables
+      debug:
+        msg: OS = {{ansible_distribution}} # can take the var from ansible -i /home/centos/test-inv all -k -m setup
+    - name: Run shell command and store output
+      shell: uptime # shell is a module to run shell commands and uptime is Shell command
+      register: out # store the output in a variable, out is user defined name we can use any other name
+    - name: print uptime output
+      debug:
+        msg: "{{out.stdout}}"
+      ## In Ansible if value starts with a variable then it has to be double-quoted.
+    - name: declare a variable/fact
+      set_fact: # module
+        OUTPUT: "{{out.stdout}}"
+
+    - name: print OUTPUT
+      debug:
+        msg: "{{OUTPUT}}"
+
+  roles:
+    - sample.yml

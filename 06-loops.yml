@@ -1,0 +1,16 @@
+- name: Loops
+  hosts: localhost
+  tasks:
+    - name: print
+      debug:
+        msg: Hello, {{item}}
+      loop:
+        - John
+        - Ram
+    - name: Print Loop from Map
+        debug:
+          msg: Hello {{item.name}}, Welcome to {{item.course}} training
+        #when: item.name == "John" - for any conditions
+        loop:
+          - { name: John, course: AWS }
+          - { name: Ram, course: DevOps }

@@ -21,7 +21,7 @@
     remote_src: yes
 
 - name: Copy roboshop config file
-  copy:
+  template:
     src: roboshop.conf
     dest: /etc/nginx/default.d/roboshop.conf
   notify: Restart nginx

@@ -3,22 +3,12 @@
     name: nginx
     state: present
 
-- name: Download frontend archive
-  ansible.builtin.unarchive:
-    src: https://github.com/roboshop-devops-project/frontend/archive/main.zip
-    dest: /tmp
-    remote_src: yes
-
-- name: Remove Old content
-  ansible.builtin.file:
-    path: /usr/share/nginx/html
-    state: absent
-
-- name: Copy extracted content to nginx path
-  ansible.builtin.copy:
-    src: /tmp/frontend-main/static/
-    dest: /usr/share/nginx/html/
-    remote_src: yes
+- name: download frontend
+  include_role:
+    name: common
+    tasks_from: download
+  vars:
+    APP_PATH: /usr/share/nginx/html
 
 - name: Copy roboshop config file
   template:

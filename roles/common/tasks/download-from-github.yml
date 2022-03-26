@@ -2,6 +2,7 @@
   user:
     name: roboshop
   register: ROBOSHOP_USER
+  when: APP_TYPE == "backend"
 
 - name: extract the {{COMPONENT}} archive
   ansible.builtin.unarchive:
@@ -21,3 +22,11 @@
     remote_src: yes
     owner: roboshop
     group: roboshop
+  when: APP_TYPE == "backend"
+
+- name: Copy extracted content to nginx path
+  ansible.builtin.copy:
+    src: /tmp/{{COMPONENT}}-main/static/
+    dest: "{{APP_PATH}}/"
+    remote_src: yes
+  when: APP_TYPE == "fronten"

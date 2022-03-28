@@ -4,16 +4,25 @@
   register: ROBOSHOP_USER
   when: APP_TYPE == "backend"
 
-- name: extract the {{COMPONENT}} archive
-  ansible.builtin.unarchive:
-    src: "https://github.com/roboshop-devops-project/{{COMPONENT}}/archive/main.zip"
-    dest: /tmp
-    remote_src: yes
+- name: download archive
+  get_url:
+    url: http://172.31.15.180:8081/repository/{{COMPONENT}}/{{COMPONENT}}-{{APP_VERSION}}-.zip
+    dest: /tmp/{{COMPONENT}}-{{APP_VERSION}}-.zip
+    username: bar
+    password: '{{ mysecret }}'
 
 - name: Remove old content
   ansible.builtin.file:
     path: "{{APP_PATH}}"
     state: absent
+
+- name: extract the {{COMPONENT}} archive
+  ansible.builtin.unarchive:
+    src: "/tmp/{{COMPONENT}}-{{APP_VERSION}}-.zip"
+    dest: {{APP_PATH}}/
+    remote_src: yes
+
+
 
 #- name: copy the extracted content to {{COMPONENT}} path
 #  ansible.builtin.copy:

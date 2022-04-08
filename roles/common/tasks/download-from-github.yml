@@ -29,4 +29,4 @@
     src: /tmp/{{COMPONENT}}-main/static/
     dest: "{{APP_PATH}}/"
     remote_src: yes
-  when: APP_TYPE == "fronten"
+  when: APP_TYPE == "frontend"

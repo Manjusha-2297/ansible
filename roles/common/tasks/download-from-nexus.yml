@@ -39,7 +39,7 @@
 
 - name: extract the app archive for frontend
   ansible.builtin.unarchive:
-    src: "/tmp/{{COMPONENT}}-{{APP_VERSION}}-.zip"
+    src: "/tmp/{{COMPONENT}}-{{APP_VERSION}}.zip"
     dest: "{{APP_PATH}}"
     remote_src: yes
   when: APP_TYPE == "frontend"

@@ -1,10 +1,10 @@
-- name: add roboshop user
+- name: Create RoboShop App User
   user:
     name: roboshop
   register: ROBOSHOP_USER
   when: APP_TYPE == "backend"
 
-- name: download archive
+- name: Download Archive
   get_url:
     url: "http://172.31.15.180:8081/repository/{{COMPONENT}}/{{COMPONENT}}-{{APP_VERSION}}.zip"
     dest: "/tmp/{{COMPONENT}}-{{APP_VERSION}}.zip"
@@ -16,28 +16,28 @@
     path: "{{APP_PATH}}"
     state: absent
 
-- name: create app directory for backend
+- name: Create App directory for backend
   ansible.builtin.file:
     path: "{{APP_PATH}}"
     state: directory
   when: APP_TYPE == "backend"
   become_user: roboshop
 
-- name: create app directory for frontend
+- name: Create App directory for frontend
   ansible.builtin.file:
     path: "{{APP_PATH}}"
     state: directory
   when: APP_TYPE == "frontend"
 
-- name: extract the app archive for backend
+- name: Extract App Archive for backend
   ansible.builtin.unarchive:
-    src: "/tmp/{{COMPONENT}}-{{APP_VERSION}}-.zip"
+    src: "/tmp/{{COMPONENT}}-{{APP_VERSION}}.zip"
     dest: "{{APP_PATH}}"
     remote_src: yes
   when: APP_TYPE == "backend"
   become_user: roboshop
 
-- name: extract the app archive for frontend
+- name: Extract App Archive for frontend
   ansible.builtin.unarchive:
     src: "/tmp/{{COMPONENT}}-{{APP_VERSION}}.zip"
     dest: "{{APP_PATH}}"
